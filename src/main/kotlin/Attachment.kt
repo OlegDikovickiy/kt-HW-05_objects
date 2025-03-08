@@ -1,6 +1,4 @@
-abstract class Attachment(
-    open val type: String // Тип вложения
-)
+sealed class Attachment(val type: String)
 
 data class Photo(
     val id: Int,

@@ -1,5 +1,4 @@
-import junit.framework.TestCase.assertNotNull
-import junit.framework.TestCase.assertNull
+import junit.framework.TestCase.*
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertFalse

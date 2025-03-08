@@ -1,4 +1,4 @@
-data class Comments(
+data class CommentsPost(
     val count: Int = 0, // Количество комментариев
     val canPost: Boolean = true, // Может ли текущий пользователь оставить комментарий
     val groupsCanPost: Boolean = false, // Могут ли сообщества оставлять комментарии

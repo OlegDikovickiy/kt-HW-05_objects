@@ -2,45 +2,47 @@ import kotlin.coroutines.coroutineContext
 
 fun main() {
 
-    val photo = Photo(1, 123, "https://vk.com/photo130", "https://vk.com/photo604")
-    val video = Video(1, 123, "Funny Cat Video", 30)
-//    val audio = Audio(1, 123, "Artist", "Song Title")
-//    val doc = Doc(1, 123, "Document.pdf", 1024)
-//    val link = Link("https://example.com", "Example", "This is an example link")
-
-    val photoAttachment = PhotoAttachment(photo)
-    val videoAttachment = VideoAttachment(video)
 
     // Создаем новый пост
     val post = Post(
-        id = 0,
+        id = 1,
         ownerId = 123,
         fromId = 456,
         date = 1234567890,
         text = "Пост с вложениями",
-        attachments = arrayOf(photoAttachment, videoAttachment)
     )
 
     // Добавляем пост в WallService
     val addedPost = WallService.add(post)
     println("Добавлен пост: $addedPost")
-    // Обрабатываем вложения из поста
-    for (attachment in addedPost.attachments) {
-        processAttachment(attachment)
+
+    // Создаем комментарий
+    val comment = Comment(
+        id = 0,
+        fromId = 789,
+        date = 1234567891,
+        text = "Это комментарий",
+        postId = 1 // Указываем ID поста, к которому относится комментарий
+    )
+
+    // Добавляем комментарий
+    val addedComment = WallService.createComment(1, comment)
+    println("Добавлен комментарий: $addedComment")
+
+    // Пытаемся добавить комментарий к несуществующему посту
+    try {
+        val invalidComment = Comment(
+            id = 0,
+            fromId = 789,
+            date = 1234567892,
+            text = "Несуществующий комментарий",
+            postId = 999 // Несуществующий ID поста
+        )
+        WallService.createComment(999, invalidComment)
+    } catch (e: PostNotFoundException) {
+        println(e.message)
     }
 
-    // Обновляем пост
-    val updatedPost = addedPost.copy(text = "Обновленный текст поста")
-    val isUpdated = WallService.update(updatedPost)
-    println("Пост обновлен: $isUpdated")
-
-    // Получаем все посты
-    val allPosts = WallService.getPosts()
-    println("Все посты: $allPosts")
-
-    // Очищаем WallService
-    WallService.clear()
-    println("Все посты после очистки: ${WallService.getPosts()}")
 }
 
 

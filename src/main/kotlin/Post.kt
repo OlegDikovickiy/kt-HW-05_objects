@@ -11,5 +11,6 @@ data class Post(
     val postType: String = "post", //Тип записи (post, copy, reply, postpone, suggest)
     val canPin: Boolean = true, //Разрешено закрепить
     val replyOwnerId: Int? = null, // id владельца записи, в ответ на которую оставлена текущая (если есть)
-    val replyPostId: Int? = null // id записи, в ответ на которую оставлена текущая (если есть)
+    val replyPostId: Int? = null, // id записи, в ответ на которую оставлена текущая (если есть)
+    val attachments: Array<Attachment> = emptyArray() // Массив вложений
 )

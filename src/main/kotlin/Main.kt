@@ -27,20 +27,19 @@ fun main() {
 
     // Добавляем комментарий
     val addedComment = WallService.createComment(1, comment)
-    println("Добавлен комментарий: $addedComment")
+    val reportComment = WallService.reportComment(1,"Спам")
 
-    // Пытаемся добавить комментарий к несуществующему посту
     try {
-        val invalidComment = Comment(
-            id = 0,
-            fromId = 789,
-            date = 1234567892,
-            text = "Несуществующий комментарий",
-            postId = 999 // Несуществующий ID поста
-        )
-        WallService.createComment(999, invalidComment)
-    } catch (e: PostNotFoundException) {
-        println(e.message)
+        WallService.reportComment(commentId = 999, reason = "Спам")
+    } catch (e: CommentNotFoundException) {
+        println(e.message) // Комментарий с ID 999 не найден
+    }
+
+    // Пытаемся добавить репорт с пустой причиной
+    try {
+        WallService.reportComment(commentId = 1, reason = "")
+    } catch (e: InvalidReasonException) {
+        println(e.message) // Некорректная причина:
     }
 
 }

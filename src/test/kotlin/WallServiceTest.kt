@@ -116,4 +116,71 @@ class WallServiceTest {
         // Пытаемся добавить комментарий (должно выкинуть исключение)
         service.createComment(postId = 999, comment = comment)
     }
+
+    @Test
+    fun reportComment_WithValidData_ShouldAddReport() {
+        val service = WallService
+
+        val post = Post(
+            id = 1,
+            ownerId = 123,
+            fromId = 456,
+            date = 1234567890,
+            text = "Тестовый пост"
+        )
+        service.add(post)
+
+        val comment = Comment(
+            id = 0, // ID будет присвоен автоматически
+            fromId = 789,
+            date = 1234567891,
+            text = "Это комментарий",
+            postId = 1
+        )
+
+        service.createComment(postId = 1, comment = comment)
+        // Добавляем репорт
+        service.reportComment(commentId = 1, reason = "Спам")
+        // Проверяем, что репорт добавлен
+        assertEquals(1, service.getCommentReports().size)
+    }
+
+    @Test(expected = CommentNotFoundException::class)
+    fun reportComment_WithNonExistingComment_ShouldThrowException() {
+        // Используем объект WallService напрямую
+        val service = WallService
+
+        // Пытаемся добавить репорт к несуществующему комментарию
+        service.reportComment(commentId = 999, reason = "Спам")
+    }
+
+    @Test(expected = InvalidReasonException::class)
+    fun reportComment_WithEmptyReason_ShouldThrowException() {
+        // Используем объект WallService напрямую
+        val service = WallService
+
+        // Создаем пост и комментарий
+        val post = Post(
+            id = 1,
+            ownerId = 123,
+            fromId = 456,
+            date = 1234567890,
+            text = "Тестовый пост"
+        )
+        service.add(post)
+
+        val comment = Comment(
+            id = 0,
+            fromId = 789,
+            date = 1234567891,
+            text = "Это комментарий",
+            postId = 1
+        )
+        service.createComment(postId = 1, comment = comment)
+
+        // Пытаемся добавить репорт с пустой причиной
+        service.reportComment(commentId = 1, reason = "")
+    }
+
+
 }

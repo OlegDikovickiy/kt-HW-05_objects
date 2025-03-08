@@ -3,6 +3,7 @@ object WallService {
     private var nextId = 1 // Счетчик для генерации уникальных ID
 
     private var comments = emptyArray<Comment>()
+    private var commentReports = emptyArray<CommentReport>() // Массив для хранения репортов
     private var nextCommentId = 1 // Счетчик для генерации уникальных ID комментариев
 
 
@@ -40,16 +41,45 @@ object WallService {
         return newComment
     }
 
+    fun reportComment(commentId: Int, reason: String) {
+        // Проверяем, существует ли комментарий
+        var commentFound = false
+        for (comment in comments) {
+            if (comment.id == commentId) {
+                commentFound = true
+                break
+            }
+        }
+        // Если комментарий не найден, выбрасываем исключение
+        if (!commentFound) {
+            throw CommentNotFoundException("Комментарий с ID $commentId не найден")
+        }
+        // Проверяем, что причина не пустая
+        if (reason.isBlank()) {
+            throw InvalidReasonException("Некорректная причина: $reason")
+        }
+
+        // Добавляем репорт в массив
+        commentReports += CommentReport(commentId, reason)
+    }
+
     //Очищает список постов и сбрасывает счетчик ID.
     fun clear() {
         posts.clear()
         nextId = 1
         comments = emptyArray()
+        commentReports = emptyArray()
         nextCommentId = 1
+
+    }
+
+    fun getCommentReports(): Array<CommentReport> {
+        return commentReports
     }
 
     //Возвращает список всех постов.
     fun getPosts(): List<Post> {
         return posts.toList()
     }
+
 }

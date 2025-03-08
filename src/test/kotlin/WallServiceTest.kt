@@ -1,3 +1,5 @@
+import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertNull
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertFalse
@@ -20,10 +22,15 @@ class WallServiceTest {
             ownerId = 123,
             fromId = 456,
             date = 1234567890,
-            text = "Тестовый пост"
+            text = "Тестовый пост",
+            replyOwnerId = null,
+            replyPostId = null
         )
 
         val addedPost = service.add(post)
+        assertNotNull(addedPost)
+        assertNull(addedPost.replyOwnerId)
+        assertNull(addedPost.replyPostId)
         assertNotEquals(0, addedPost.id, "ID поста должен быть отличным от 0 после добавления")
     }
 
